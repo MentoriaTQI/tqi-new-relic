@@ -1,0 +1,22 @@
+version: "3"
+services:
+  tad:
+    image: postgres:9.6
+    container_name: "postgres"
+    environment:
+      - POSTGRES_DB=cepbr
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - TZ=GMT
+    volumes:
+      - "./init:/docker-entrypoint-initdb.d"
+    ports:
+      - 5432:5432
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.57.0/24

@@ -1,6 +1,36 @@
 # Compiled class file
 *.class
 
+### Gradle ###
+.gradle
+**/bin/
+**/build/
+**/out/
+gradlew.bat
+!gradle-wrapper.jar
+/.metadata/
+**/src/main/generated
+
+target
+.vscode
+.idea
+*.log
+*.tmp
+*.iml
+*.gz
+*.jar
+*.hprof
+.project
+.settings/
+.classpath
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+/out/
+
 # Log file
 *.log
 
