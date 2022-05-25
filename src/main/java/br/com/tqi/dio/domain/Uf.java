@@ -15,18 +15,18 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "city")
+@Table(name = "uf")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class City implements Serializable {
+public class Uf implements Serializable {
 
-    private static final long serialVersionUID = -1573343401340917312L;
+    private static final long serialVersionUID = 3609016016678887072L;
 
     @Id
     private String id;
 
-    @OneToMany(mappedBy = "city", orphanRemoval = true)
+    @OneToMany(mappedBy = "uf", orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
 
 }

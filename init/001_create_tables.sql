@@ -1,30 +1,28 @@
-CREATE TABLE state (
-    id bigserial NOT NULL,
-    description text,
+CREATE TABLE uf (
+    id text,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE city (
-    id bigserial NOT NULL,
-    description text,
-    state_id int8,
-    foreign key (state_id) references state(id),
+    id text,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE district (
-    id bigserial NOT NULL,
-    description text,
+    id text,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE address (
     id bigserial NOT NULL,
-    postalCode text,
+    postal_code text,
     description text,
-    district_id int8,
-    city_id int8,
+    district_id text,
+    uf_id text,
+    city_id text,
+    UNIQUE(postal_code, description, district_id, city_id, uf_id),
     foreign key (district_id) references district(id),
     foreign key (city_id) references city(id),
+    foreign key (uf_id) references uf(id),
     PRIMARY KEY (id)
 );
