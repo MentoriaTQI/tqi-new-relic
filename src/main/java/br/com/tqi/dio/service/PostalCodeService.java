@@ -4,7 +4,7 @@ import br.com.tqi.dio.domain.Address;
 import br.com.tqi.dio.domain.City;
 import br.com.tqi.dio.domain.District;
 import br.com.tqi.dio.domain.Uf;
-import br.com.tqi.dio.dto.ImportPostalCodeDTO;
+import br.com.tqi.dio.dto.PostalCodeDTO;
 import br.com.tqi.dio.repository.AddressRepository;
 import br.com.tqi.dio.repository.CityRepository;
 import br.com.tqi.dio.repository.DistrictRepository;
@@ -24,7 +24,7 @@ public class PostalCodeService {
     private final DistrictRepository districtRepository;
     private final AddressRepository addressRepository;
 
-    public void saveAll(ImportPostalCodeDTO message) {
+    public void saveAll(PostalCodeDTO message) {
         District district = districtRepository.findById(message.getDistrict())
                 .orElse(District.builder()
                         .id(message.getDistrict())
@@ -53,6 +53,10 @@ public class PostalCodeService {
                             .build());
                     log.info("All data was insert={}", message.getPostalCode());
                 });
+    }
+
+    public Address find(String postalCode) {
+        return addressRepository.findByPostalCode(postalCode).orElseThrow(() -> new RuntimeException("cep not found"));
     }
 
 }

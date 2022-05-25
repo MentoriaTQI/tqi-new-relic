@@ -14,4 +14,6 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
 
     Optional<Address> findByPostalCodeAndCityAndDistrictAndUf(String postalCode, City city, District district, Uf uf);
 
+    Optional<Address> findByPostalCode(String postalCode);
+
 }

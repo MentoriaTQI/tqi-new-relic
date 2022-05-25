@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class ImportPostalCodeDTO implements Serializable {
+public class PostalCodeDTO implements Serializable {
 
     private String state;
     private String city;
