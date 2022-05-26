@@ -12,5 +12,6 @@ public class PostalCodeDTO implements Serializable {
     private String district;
     private String postalCode;
     private String address;
+    private String origin;
 
 }

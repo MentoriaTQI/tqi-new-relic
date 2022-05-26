@@ -7,11 +7,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Entity
@@ -25,8 +22,5 @@ public class District implements Serializable {
 
     @Id
     private String id;
-
-    @OneToMany(mappedBy = "district", orphanRemoval = true)
-    private List<Address> addresses = new ArrayList<>();
 
 }

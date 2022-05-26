@@ -5,13 +5,19 @@ import br.com.tqi.dio.domain.City;
 import br.com.tqi.dio.domain.District;
 import br.com.tqi.dio.domain.Uf;
 import br.com.tqi.dio.dto.PostalCodeDTO;
+import br.com.tqi.dio.exception.PostalCodeNotFoundException;
 import br.com.tqi.dio.repository.AddressRepository;
 import br.com.tqi.dio.repository.CityRepository;
 import br.com.tqi.dio.repository.DistrictRepository;
 import br.com.tqi.dio.repository.UfRepository;
+import com.newrelic.api.agent.NewRelic;
+import com.newrelic.api.agent.Trace;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Service
@@ -24,7 +30,19 @@ public class PostalCodeService {
     private final DistrictRepository districtRepository;
     private final AddressRepository addressRepository;
 
-    public void saveAll(PostalCodeDTO message) {
+    @Trace(dispatcher = true)
+    public void saveAddressDataFromQueue(PostalCodeDTO message) {
+        message.setOrigin("QUEUE");
+        saveAddressData(message);
+    }
+
+    public void saveAddressDataFromRest(PostalCodeDTO message) {
+        message.setOrigin("REST");
+        saveAddressData(message);
+    }
+
+    private void saveAddressData(PostalCodeDTO message) {
+        addCustomerParameters(message);
         District district = districtRepository.findById(message.getDistrict())
                 .orElse(District.builder()
                         .id(message.getDistrict())
@@ -42,7 +60,9 @@ public class PostalCodeService {
         ufRepository.save(uf);
         addressRepository.findByPostalCodeAndCityAndDistrictAndUf(message.getPostalCode(), city, district, uf)
                 .ifPresentOrElse(address -> {
-                    log.warn("Address was exists={}", address.getPostalCode());
+                    addressRepository.save(address);
+                    NewRelic.incrementCounter("record-updated");
+                    log.info("Record was updated={}", address.getPostalCode());
                 }, () -> {
                     addressRepository.save(Address.builder()
                             .description(message.getAddress())
@@ -51,12 +71,21 @@ public class PostalCodeService {
                             .city(city)
                             .uf(uf)
                             .build());
-                    log.info("All data was insert={}", message.getPostalCode());
+                    log.info("Address was insert={}", message.getPostalCode());
+                    NewRelic.incrementCounter("record-created");
                 });
     }
 
-    public Address find(String postalCode) {
-        return addressRepository.findByPostalCode(postalCode).orElseThrow(() -> new RuntimeException("cep not found"));
+    public Address findByPostalCode(String postalCode) {
+        return addressRepository.findByPostalCode(postalCode)
+                .orElseThrow(() -> new PostalCodeNotFoundException(postalCode));
+    }
+
+    private void addCustomerParameters(PostalCodeDTO message) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("postalCode", message.getPostalCode());
+        params.put("origin", message.getOrigin());
+        NewRelic.addCustomParameters(params);
     }
 
 }

@@ -17,7 +17,7 @@ public class PostalCodeConsumer {
     @SqsListener("${aws.import.cep.queue}")
     public void receiveMessage(PostalCodeDTO message) {
         log.info("Receive message={}", message);
-        postalCodeService.saveAll(message);
+        postalCodeService.saveAddressDataFromQueue(message);
     }
 
 }

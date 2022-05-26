@@ -35,7 +35,7 @@ public class SqsConfiguration {
 
     protected AsyncTaskExecutor createDefaultTaskExecutor() {
         ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
-        threadPoolTaskExecutor.setThreadNamePrefix("SQSExecutor - ");
+        threadPoolTaskExecutor.setThreadNamePrefix("SqsExecutor-");
         threadPoolTaskExecutor.setCorePoolSize(100);
         threadPoolTaskExecutor.setMaxPoolSize(200);
         threadPoolTaskExecutor.afterPropertiesSet();

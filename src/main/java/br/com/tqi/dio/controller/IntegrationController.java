@@ -21,9 +21,8 @@ public class IntegrationController {
 
 	@GetMapping
 	public Map find() throws JsonProcessingException {
-		log.info("find");
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.readValue(externalIntegration.find(), Map.class);
+		log.info("find integration");
+		return new ObjectMapper().readValue(externalIntegration.find(), Map.class);
 	}
 
 }
